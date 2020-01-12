@@ -17,6 +17,7 @@ services:
       replicas: 3
     environment:
       - KAFKA_BROKER_ID={{.Task.Slot}}
+      - ZK_SERVERS=tasks.zookeeper
   manager:
     image: qnib/plain-kafka-manager:latest
     ports:
