@@ -1,0 +1,25 @@
+version: '3'
+services:
+  zookeeper:
+    image: qnib/plain-zookeeper:latest
+    ports:
+      - "2181:2181"
+  zkui:
+    image: qnib/plain-zkui:latest
+    ports:
+      - "9090:9090"
+  broker:
+    image: qnib/plain-kafka:latest
+    hostname: "{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}"
+    ports:
+      - "9092:9092"
+    deploy:
+      replicas: 3
+    environment:
+      - KAFKA_BROKER_ID={{.Task.Slot}}
+  manager:
+    image: qnib/plain-kafka-manager:latest
+    ports:
+      - "9000:9000"
+    environment:
+      ZOOKEEPER_HOSTS: "tasks.zookeeper:2181"
