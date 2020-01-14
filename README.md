@@ -9,6 +9,8 @@ docker-compose -f docker-compose-wurstmeister.yml down
 docker image ls
 docker network ls
 docker service ls --format 'table {{.Name}}\t{{.Replicas}}\t{{.Ports}}'
+docker service rm $(docker service ls -q)
+kafkacat -b localhost:9093 -L
 ```
 
 ### Check container running:

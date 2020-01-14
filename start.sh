@@ -5,10 +5,12 @@ docker service create --network kafka-net --name=zkui --publish 9090:9090 qnib/p
 echo "...........................Zookeeper ui started..........................."
 docker service create --network kafka-net --name broker --publish 9092:9092 --publish 9093:9093 \
  --hostname="{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}" \
- -e KAFKA_ADVERTISED_HOST_NAME=192.168.0.107 \
+ -e KAFKA_ADVERTISED_HOST_NAME=localhost \
  -e KAFKA_BROKER_ID={{.Task.Slot}} \
- -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT \
- -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9093 \
+ -e KAFKA_LISTENERS=INTERNAL://:9092,EXTERNAL://:9093 \
+ -e KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL \
+ -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT \
+ -e KAFKA_ADVERTISED_LISTENERS=INTERNAL://:9092,EXTERNAL://:9093 \
  -e ZK_SERVERS=tasks.zookeeper \
  qnib/plain-kafka:latest
 echo "...........................Kafka broker started..........................."
@@ -30,4 +32,3 @@ echo "...........................Kafka manager test started.....................
 #echo "...........................Topic scaling complete..........................."
 
 #sudo # -nlpt | grep dockerd
-netstat -nlpt | grep java
