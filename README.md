@@ -2,7 +2,13 @@
 
 ```bash
 docker-compose up -d
+docker-compose -f docker-compose-spotify.yml up
+docker-compose -f docker-compose-spotify.yml down
+docker-compose -f docker-compose-wurstmeister.yml up
+docker-compose -f docker-compose-wurstmeister.yml down
 docker image ls
+docker network ls
+docker service ls --format 'table {{.Name}}\t{{.Replicas}}\t{{.Ports}}'
 ```
 
 ### Check container running:
@@ -59,7 +65,7 @@ Zookeeper UI: http://localhost:9090/
 ### Step-4: Start Kafka
 
 ```bash
-docker service create --network kafka-net --name broker \
+docker service create --network kafka-net --name broker --publish 9092:9092 \
  --hostname="{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}" \
  -e KAFKA_BROKER_ID={{.Task.Slot}} -e ZK_SERVERS=tasks.zookeeper \
  qnib/plain-kafka:latest

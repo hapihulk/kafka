@@ -1,15 +1,25 @@
 version: '3'
+networks:
+  kafka-net:
+    driver: overlay
+    
 services:
   zookeeper:
     image: qnib/plain-zookeeper:latest
+    networks:
+      - kafka-net
     ports:
       - "2181:2181"
   zkui:
     image: qnib/plain-zkui:latest
+    networks:
+      - kafka-net
     ports:
       - "9090:9090"
   broker:
     image: qnib/plain-kafka:latest
+    networks:
+      - kafka-net
     hostname: "{{.Service.Name}}.{{.Task.Slot}}.{{.Task.ID}}"
     ports:
       - "9092:9092"
@@ -20,6 +30,8 @@ services:
       - ZK_SERVERS=tasks.zookeeper
   manager:
     image: qnib/plain-kafka-manager:latest
+    networks:
+      - kafka-net
     ports:
       - "9000:9000"
     environment:
