@@ -6,11 +6,13 @@ docker-compose -f docker-compose-spotify.yml up
 docker-compose -f docker-compose-spotify.yml down
 docker-compose -f docker-compose-wurstmeister.yml up
 docker-compose -f docker-compose-wurstmeister.yml down
+docker-compose -f docker-compose-landoop.yml up
+docker-compose -f docker-compose-landoop.yml down
 docker image ls
 docker network ls
 docker service ls --format 'table {{.Name}}\t{{.Replicas}}\t{{.Ports}}'
 docker service rm $(docker service ls -q)
-kafkacat -b localhost:9093 -L
+kafkacat -b localhost:9092 -L
 ```
 
 ### Check container running:
